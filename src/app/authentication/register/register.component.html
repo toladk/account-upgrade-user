@@ -1,0 +1,176 @@
+<div class="vh-100" style="overflow-y: auto;">
+    <div class="authincation">
+        <div class="container">
+            <div class="row justify-content-center h-100 align-items-center">
+
+
+
+                <div class="col-md-6">
+                    <div class="authincation-content">
+
+                        <div class="row no-gutters">
+                            <ng-template #indicatorTemplate><i nz-icon nzType="loading" class="mt-5" style="font-size: 30px; color: #4CAF50; padding-top: 190px;" nzSpin="true"></i></ng-template>
+                            <nz-spin simple [nzIndicator]="indicatorTemplate" [nzSpinning]="isSpinning">
+                                <div class="col-xl-12">
+                                    <div class="auth-form">
+                                        <div class="text-center mt-4 mb-5">
+                                            <a href="index.html"><img src="assets/images/logologin.png" style="width: 200px; height: 50px;" alt=""></a>
+                                        </div>
+
+
+                                        <div class="row" *ngIf="selectType">
+                                            <div class="col-6 col-lg-6">
+                                                <div class="card" style="cursor: pointer;" (click)="showForm('individual')">
+                                                    <div class="text-center">
+                                                        <i class="flaticon-381-user" style="font-size: 38px;"></i>
+                                                        <p style="font-size: 17px;">Individual</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6 col-lg-6">
+                                                <div class="card" style="cursor: pointer;" (click)="showForm('corporate')">
+                                                    <div class="text-center">
+                                                        <i class="fa fa-users mt-3 mb-2" style="font-size: 38px;"></i>
+                                                        <p style="font-size: 17px;">Corporate</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- <h4 class="text-center mb-4">Sign into your account</h4> -->
+                                        <form [formGroup]="registerForm" *ngIf="showIndividual">
+                                            <div class="mb-3">
+                                                <label class="mb-1"><strong>Account No<span style="color: orangered; margin-left: 2px;">*</span></strong></label>
+                                                <input type="text" maxlength="10" formControlName="accountNumber" class="form-control" placeholder="Enter Account No" (blur)="getAccountInfoUser()">
+                                                <span class="text-danger valiFontSizes" *ngIf="registerForm.get('accountNumber')?.errors && (registerForm.get('accountNumber')?.touched || registerForm.get('accountNumber')?.dirty)">
+                                                  <span *ngIf="registerForm.get('accountNumber')?.errors?.['required']">Account Number is required</span>
+                                                <span *ngIf="registerForm.get('accountNumber')?.errors?.['pattern']">Accept numbers only.</span><br>
+                                                <span *ngIf="registerForm.get('accountNumber')?.errors?.['minlength']">Minimum of 10 numbers only.</span>
+                                                </span>
+                                            </div>
+                                            <!-- <div class="mb-3">
+                                                <label class="mb-1"><strong>Email<span style="color: orangered; margin-left: 2px;">*</span></strong></label>
+                                                <input type="text" [(ngModel)]="accountEmail" formControlName="emailAddress" class="form-control" placeholder="Enter Email">
+                                                <span class="text-danger valiFontSizes" *ngIf="registerForm.get('emailAddress')?.errors && (registerForm.get('emailAddress')?.touched || registerForm.get('emailAddress')?.dirty)">
+                                                  <span *ngIf="registerForm.get('emailAddress')?.errors?.['required']">Email is required</span>
+                                                <span *ngIf="registerForm.get('emailAddress')?.errors?.['pattern']">Invalid email address</span>
+                                                </span>
+                                            </div> -->
+                                            <!-- <div class="mb-3">
+                                                <label class="mb-1"><strong>Date Of Birth<span style="color: orangered; margin-left: 2px;">*</span></strong></label>
+                                                <input type="text" [(ngModel)]="accountDob" formControlName="dateOfBirth" class="form-control" placeholder="Enter Date Of Birth" readonly>
+                                            </div> -->
+                                            <div *ngIf="individual">
+                                            <div class="mb-3">
+                                                <label class="mb-1"><strong>Password<span style="color: orangered; margin-left: 2px;">*</span></strong></label>
+                                                <input type="password" formControlName="password" class="form-control" placeholder="Enter Password">
+                                                <span class="text-danger valiFontSizes" *ngIf="registerForm.get('password')?.errors && (registerForm.get('password')?.touched || registerForm.get('password')?.dirty)">
+                                                  <span *ngIf="registerForm.get('password')?.errors?.['required']">Password is required</span>
+                                                <span *ngIf="registerForm.get('password')?.errors?.['pattern']">Accept numbers, alphabet and symbol only.</span><br>
+                                                <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Minimum of 8 characters only.</span>
+                                                </span>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="mb-1"><strong>Confirm Password<span style="color: orangered; margin-left: 2px;">*</span></strong></label>
+                                                <input type="password" formControlName="confirmPassword" class="form-control" placeholder="Enter Confirm Password">
+                                                <span class="text-danger valiFontSizes" *ngIf="registerForm.get('confirmPassword')?.errors && (registerForm.get('confirmPassword')?.touched || registerForm.get('confirmPassword')?.dirty)">
+                                                  <span *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Confirm Password is required</span>
+                                                <span *ngIf="registerForm.get('confirmPassword')?.errors?.['confirmedValidator']">Password and Confirm Password must be match.</span>
+                                                </span>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="mb-1"><strong>Enable 2Factor<span style="color: orangered; margin-left: 2px;">*</span></strong></label>
+                                                <select class="form-control wide" formControlName="enableMFa">
+                                                  <option value="" disabled selected>Select 2Factor</option>
+                                                  <option value="true">Yes</option>
+                                                  <option value="false">No</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                            <!-- <div class="row d-flex justify-content-between mt-4 mb-2">
+                                                <div class="mb-3">
+                                              <div class="form-check custom-checkbox ms-1">
+                                                  <input type="checkbox" class="form-check-input" id="basic_checkbox_1">
+                                                  <label class="form-check-label" for="basic_checkbox_1">Remember my preference</label>
+                                              </div>
+                                          </div>
+                                            </div> -->
+                                            <div class="text-center mt-4">
+                                                <button type="submit" [disabled]="registerForm.invalid" class="btn btn-primary btn-block" (click)="onSubmitIndividual()">Sign Up</button>
+                                            </div>
+                                        </form>
+
+                                        <form [formGroup]="registerCorpForm" *ngIf="showCorp">
+                                            <div class="mb-3">
+                                                <label class="mb-1"><strong>Account No<span style="color: orangered; margin-left: 2px;">*</span></strong></label>
+                                                <input type="text" maxlength="10" formControlName="accountNumber" class="form-control" placeholder="Enter Account No" (blur)="getAccountInfoCorp()">
+                                                <span class="text-danger valiFontSizes" *ngIf="registerCorpForm.get('accountNumber')?.errors && (registerCorpForm.get('accountNumber')?.touched || registerCorpForm.get('accountNumber')?.dirty)">
+                                                <span *ngIf="registerCorpForm.get('accountNumber')?.errors?.['required']">Account Number is required</span>
+                                                <span *ngIf="registerCorpForm.get('accountNumber')?.errors?.['pattern']">Accept numbers only.</span><br>
+                                                <span *ngIf="registerCorpForm.get('accountNumber')?.errors?.['minlength']">Minimum of 10 numbers only.</span>
+                                                </span>
+                                            </div>
+                                            <!-- <div class="mb-3">
+                                                <label class="mb-1"><strong>Email<span style="color: orangered; margin-left: 2px;">*</span></strong></label>
+                                                <input type="text" [(ngModel)]="accountEmail" formControlName="emailAddress" class="form-control" placeholder="Enter Email" readonly>
+                                                <span class="text-danger valiFontSizes" *ngIf="registerCorpForm.get('emailAddress')?.errors && (registerCorpForm.get('emailAddress')?.touched || registerCorpForm.get('emailAddress')?.dirty)">
+                                                <span *ngIf="registerCorpForm.get('emailAddress')?.errors?.['required']">Email is required</span>
+                                                <span *ngIf="registerCorpForm.get('emailAddress')?.errors?.['pattern']">Invalid email address</span>
+                                                </span>
+                                            </div> -->
+                                            <!-- <div class="mb-3">
+                                                <label class="mb-1"><strong>Date Of Birth<span style="color: orangered; margin-left: 2px;">*</span></strong></label>
+                                                <input type="text" [(ngModel)]="accountDob" formControlName="dateOfBirth" class="form-control" placeholder="Enter Date Of Birth" readonly>
+                                            </div> -->
+                                            <div *ngIf="corporate">
+                                            <div class="mb-3">
+                                                <label class="mb-1"><strong>Password<span style="color: orangered; margin-left: 2px;">*</span></strong></label>
+                                                <input type="password" formControlName="password" class="form-control" placeholder="Enter Password">
+                                                <span class="text-danger valiFontSizes" *ngIf="registerCorpForm.get('password')?.errors && (registerCorpForm.get('password')?.touched || registerCorpForm.get('password')?.dirty)">
+                                                <span *ngIf="registerCorpForm.get('password')?.errors?.['required']">Password is required</span>
+                                                <span *ngIf="registerCorpForm.get('password')?.errors?.['pattern']">Accept numbers, alphabet and symbol only.</span><br>
+                                                <span *ngIf="registerCorpForm.get('password')?.errors?.['minlength']">Minimum of 8 characters only.</span>
+                                                </span>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="mb-1"><strong>Confirm Password<span style="color: orangered; margin-left: 2px;">*</span></strong></label>
+                                                <input type="password" formControlName="confirmPassword" class="form-control" placeholder="Enter Confirm Password">
+                                                <span class="text-danger valiFontSizes" *ngIf="registerCorpForm.get('confirmPassword')?.errors && (registerCorpForm.get('confirmPassword')?.touched || registerCorpForm.get('confirmPassword')?.dirty)">
+                                                <span *ngIf="registerCorpForm.get('confirmPassword')?.errors?.['required']">Confirm Password is required</span>
+                                                <span *ngIf="registerCorpForm.get('confirmPassword')?.errors?.['confirmedValidator']">Password and Confirm Password must be match.</span>
+                                                </span>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="mb-1"><strong>Enable 2Factor<span style="color: orangered; margin-left: 2px;">*</span></strong></label>
+                                                <select class="form-control wide" formControlName="enableMFa">
+                                                <option value="" disabled selected>Select 2Factor</option>
+                                                <option value="true">Yes</option>
+                                                <option value="false">No</option>
+                                              </select>
+                                            </div>
+                                        </div>
+                                            <!-- <div class="row d-flex justify-content-between mt-4 mb-2">
+                                                <div class="mb-3">
+                                            <div class="form-check custom-checkbox ms-1">
+                                                <input type="checkbox" class="form-check-input" id="basic_checkbox_1">
+                                                <label class="form-check-label" for="basic_checkbox_1">Remember my preference</label>
+                                            </div>
+                                        </div>
+                                            </div> -->
+                                            <div class="text-center mt-4">
+                                                <button type="submit" [disabled]="registerCorpForm!.invalid" class="btn btn-primary btn-block" (click)="onSubmitCorporate()">Sign Up</button>
+                                            </div>
+                                        </form>
+                                        <div class="new-account mt-3 text-center">
+                                            <p>Already have an account? <a class="text-primary" routerLink="/login">Login</a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </nz-spin>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

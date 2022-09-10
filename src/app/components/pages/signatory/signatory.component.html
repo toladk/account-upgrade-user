@@ -1,0 +1,95 @@
+<div class="content-body">
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-xl-12 d-flex">
+                <div class="col-8 col-xl-8">
+                    <div class="" style="font-size: 1.75rem; font-weight: 600; color: #000; margin-bottom: 20px;">
+                        List of Signatory
+                    </div>
+                </div>
+                <div class="col-4 col-xl-4 col-sm-4">
+                    <div class="" style="float: right;">
+                        <button class="btn btn-primary" style="padding: 3px 15px 3px 15px; margin-top: 10px;">Add Signatory</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <form [formGroup]="signatoryGetForm">
+                    <div class="col-xl-12 d-flex">
+                        <div class="col-8 col-xl-6">
+                            <label style="font-weight: 600;">Account Number</label>
+                            <div class="">
+                                <input type="text" maxlength="10" class="form-control" formControlName="accountNo" placeholder="Enter Account Number" />
+                                <span class="text-danger valiFontSizes" *ngIf="signatoryGetForm.get('accountNo')?.errors && (signatoryGetForm.get('accountNo')?.touched || signatoryGetForm.get('accountNo')?.dirty)">
+                                  <span *ngIf="signatoryGetForm.get('accountNo')?.errors?.['required']">Account Number is required</span>
+                                <span *ngIf="signatoryGetForm.get('accountNo')?.errors?.['pattern']">Accept numbers only.</span>&nbsp;
+                                <span *ngIf="signatoryGetForm.get('accountNo')?.errors?.['minlength']">Accept 10 numbers only</span><br>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-4 col-xl-3 col-sm-4">
+                            <div class="mt-4">
+                                <button class="btn btn-primary" [disabled]="signatoryGetForm!.invalid" (click)="getSignatory()" style="padding: 10px 15px 10px 15px; margin-top: 10px;">Get Signatories</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
+            <ng-template #indicatorTemplate><i nz-icon nzType="loading" class="mt-5" style="font-size: 30px; color: #4CAF50; margin-top: 20px;" nzSpin="true"></i></ng-template>
+            <nz-spin simple [nzIndicator]="indicatorTemplate" [nzSpinning]="isSpinningTable">
+                <div class="col-xl-12">
+                    <div class="table-responsive">
+                        <table class="table display mb-4 dataTablesCard order-table card-table text-black">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Full Name</th>
+                                    <th>Phone Number</th>
+                                    <th>Email</th>
+                                    <th>Position</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody *ngIf="signatorytList.length > 0">
+                                <tr *ngFor="let list of signatorytList, let i = index">
+                                    <td>{{ i+1 }}</td>
+                                    <td>{{ list.FirstName }} {{ list.LastName }}</td>
+                                    <td>{{ list.PhoneNumber }}</td>
+                                    <td>{{ list.Email }}</td>
+                                    <td>{{ list.Position }}</td>
+                                    <td>
+                                        <span class="badge badge-danger" *ngIf="list.Status === 'Inactive'">In-Active</span>
+                                        <span class="badge badge-warning" *ngIf="list.Status === 'Pending'">Pending</span>
+                                        <span class="badge badge-success" *ngIf="list.Status === 'Approved'">Approved</span>
+                                        <span class="badge badge-danger" *ngIf="list.Status === 'Rejected'">Rejected</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-info" *ngIf="list.Status === 'Rejected' || list.Status === 'Inactive'" style="cursor: pointer; margin-right: 8px;" nz-tooltip nzTooltipTitle="Upload Document"><i class="ti-upload"></i></span>
+                                        <span class="badge badge-success" style="cursor: pointer;" nz-tooltip nzTooltipTitle="View Uploaded Documents"><i class="ti-eye"></i></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody *ngIf="signatorytList.length < 1">
+                                <tr>
+                                    <td colspan="7" class="text-center">
+                                        <div class="mt-3 mb-3 font-23">
+                                            <h5 class="" style="color: #0E773B;">No Data...</h5>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </nz-spin>
+        </div>
+
+
+    </div>
+</div>

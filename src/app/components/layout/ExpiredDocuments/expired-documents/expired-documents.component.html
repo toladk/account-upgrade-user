@@ -1,0 +1,170 @@
+
+        <div class="container h-100">
+            <div style="padding-top: 200px;" class="row justify-content-center h-100 align-items-center" *ngIf="formShow">
+                <div class="col-md-6">
+                    <div class="authincation-content">
+                        <div class="row no-gutters">
+                            <ng-template #indicatorTemplate><i nz-icon nzType="loading" class="mt-5" style="font-size: 30px; color: #4CAF50; padding-top: 90px;" nzSpin="true"></i></ng-template>
+                            <nz-spin simple [nzIndicator]="indicatorTemplate" [nzSpinning]="isSpinning1" >
+                                <div class="col-xl-12">
+                                    <div class="auth-form">
+                                        <div class="text-center mb-4">
+                                            <a href="index.html"><img src="assets/images/logologin.png" style="width: 200px; height: 50px;" alt=""></a>
+                                        </div>
+                                        <!-- <h4 class="text-center mb-4">Enter Account Number</h4> -->
+                                        <form [formGroup]="accountForm">
+                                            <div class="mb-3">
+                                                <label class="mb-1"><strong>Account Number<span style="color: orangered; margin-left: 2px;">*</span></strong></label>
+                                                <input type="text" maxlength="10" class="form-control" formControlName="accountNo" placeholder="Enter Account Number" />
+                                                <span class="text-danger valiFontSizes" *ngIf="accountForm.get('accountNo')?.errors && (accountForm.get('accountNo')?.touched || accountForm.get('accountNo')?.dirty)">
+                                                  <span *ngIf="accountForm.get('accountNo')?.errors?.['required']">Account Number is required</span>
+                                                <span *ngIf="accountForm.get('accountNo')?.errors?.['pattern']">Accept numbers only.</span>&nbsp;
+                                                <span *ngIf="accountForm.get('accountNo')?.errors?.['minlength']">Accept 10 numbers only</span><br>
+                                                </span>
+                                            </div>
+
+                                            <div class="text-center">
+                                                <button   style="
+                                                background-color: #2e8a01;
+                                                border: #2e8a01;
+                                                
+                                                border-radius: 5rem;
+                                              "  nz-button [nzLoading]="isLoadingOne"  type="submit" (click)=" accountValidation()" [disabled]="!accountForm.valid" class="btn btn-primary btn-block" >Submit</button>
+                                            </div>
+                                        </form>
+                                
+                                    </div>
+                                </div>
+                            </nz-spin>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+ 
+
+<!-- Otp validation -->
+
+        <div class="container h-100">
+            <div style="padding-top: 200px;" class="row justify-content-center h-100 align-items-center" *ngIf="formShowTwo">
+                <div class="col-md-6">
+                    <div class="authincation-content">
+                        <div class="row no-gutters">
+                            <ng-template #indicatorTemplate><i nz-icon nzType="loading" class="mt-5" style="font-size: 30px; color: #4CAF50; padding-top: 90px;" nzSpin="true"></i></ng-template>
+                           
+                                <div class="col-xl-12">
+                                    <div class="auth-form">
+                                        <div class="text-center mb-4">
+                                            <a href="index.html"><img src="assets/images/logologin.png" style="width: 200px; height: 50px;" alt=""></a>
+                                        </div>
+                                        <!-- <h4 class="text-center mb-4">OTP</h4> -->
+                                        <form [formGroup]="otpForm">
+                                            <div class="mb-3">
+                                                <label class="mb-1"><strong>OTP<span style="color: orangered; margin-left: 2px;">*</span></strong></label>
+                                                <input type="text" maxlength="6" formControlName="otp" class="form-control" placeholder="Enter OTP">
+                                                <span class="text-danger valiFontSizes" *ngIf="otpForm.get('otp')?.errors && (otpForm.get('otp')?.touched || otpForm.get('otp')?.dirty)">
+                                                <span *ngIf="otpForm.get('otp')?.errors?.['required']">Otp is required</span>
+                                                <span *ngIf="otpForm.get('otp')?.errors?.['pattern']">Accept numbers only.</span><br>
+                                                <span *ngIf="otpForm.get('otp')?.errors?.['minlength']">Accept 6 numbers only.</span>
+                                                </span>
+                                            </div>
+                                            <div class="text-center">
+                                                <button nz-button [nzLoading]="isLoadingTwo" style="
+                                                background-color: #2e8a01;
+                                                border: #2e8a01;
+                                                border-radius: 5rem;
+                                              "
+                                              type="submit" (click)="otpValidation()" [disabled]="!otpForm.valid"  class="btn btn-primary btn-block" >Submit</button>
+                                            </div>
+                                        </form>
+                                        <div class="new-account mt-3 text-center">
+                                            <p style="cursor: pointer; color: black" (click)="resendOtp()">Don't receive OTP? Click to resend <a  class="text-primary" ></a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                       
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    
+        </div>
+
+
+<!-- docs upload -->
+
+
+
+        <div class="container h-100">
+            <div style="padding-top: 200px;" class="row justify-content-center h-100 align-items-center" *ngIf="formShowThree">
+                <div class="col-md-6">
+                    <div class="authincation-content">
+                        <div class="row no-gutters">
+                            <div class="col-xl-12 col-lg-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title">Update Means of Identification</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- <ng-template #indicatorTemplate23><i nz-icon nzType="loading" class="mt-5" style="font-size: 30px; color: #4CAF50; margin-top: 20px;" nzSpin="true"></i></ng-template> -->
+                                       
+                                            <div  class="basic-form">
+                                                <form [formGroup]="uploadForm">
+                                                    <div class="mb-3">
+                                                        <p style="font-weight: 600;">Upload Means of Id<span style="margin-left: 10px; font-size: 14px !important;"><i class="fa fa-question-circle me-2"></i></span></p>
+                                                        <div class="input-group">
+                                                            <div class="form-file">
+                                                                <input type="file" multiple class="form-file-input form-control" formControlName="id" (change)="docUpload($event)">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <div class="text-center">
+                                                    <button nz-button [nzLoading]="isLoadingThree" style="
+                                                    background-color: #2e8a01;
+                                                    border: #2e8a01;
+                                                    border-radius: 5rem;
+                                                  "
+                                                  [disabled]="!uploadForm.valid"
+                                                  type="submit" (click)="uploadDocSubmit()" class="btn btn-primary btn-block" >upload</button>
+                                                </div>
+                                            </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+          
+        </div>
+ 
+
+<!-- Response message -->
+
+        <div class="container h-100">
+        <div style="padding-top: 200px;" class="row justify-content-center h-100 align-items-center"  *ngIf="formShowFour">
+            <div class="authincation-content">
+                <div class="row no-gutters">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <nz-result
+                                class="desc" 
+                                nzStatus="success"
+                                nzTitle="File Uploaded Successfully!"
+                            >
+      </nz-result>
+    </div>
+    </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+

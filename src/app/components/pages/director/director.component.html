@@ -1,0 +1,322 @@
+<div class="content-body">
+    <div class="container-fluid">
+
+
+        <div class="row" *ngIf="showDirector">
+            <div class="col-xl-12 d-flex">
+                <div class="col-8 col-xl-8">
+                    <div class="" style="font-size: 1.75rem; font-weight: 600; color: #000; margin-bottom: 20px;">
+                        List of Directors
+                    </div>
+                </div>
+                <div class="col-4 col-xl-4 col-sm-4">
+                    <div class="" style="float: right;">
+                        <button class="btn btn-primary" style="padding: 3px 15px 3px 15px; margin-top: 10px;" (click)="addDir()">Add Director</button>
+                    </div>
+                </div>
+            </div>
+            <ng-template #indicatorTemplate><i nz-icon nzType="loading" class="mt-5" style="font-size: 30px; color: #4CAF50; margin-top: 20px;" nzSpin="true"></i></ng-template>
+            <nz-spin simple [nzIndicator]="indicatorTemplate" [nzSpinning]="isSpinningTable">
+                <div class="col-xl-12">
+                    <div class="table-responsive">
+                        <table class="table display mb-4 dataTablesCard order-table card-table text-black">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Full Name</th>
+                                    <th>Phone Number</th>
+                                    <th>Email</th>
+                                    <th>Position</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody *ngIf="directortList.length > 0">
+                                <tr *ngFor="let list of directortList, let i = index">
+                                    <td>{{ i+1 }}</td>
+                                    <td>{{ list.FirstName }} {{ list.LastName }}</td>
+                                    <td>{{ list.PhoneNumber }}</td>
+                                    <td>{{ list.Email }}</td>
+                                    <td>{{ list.Position }}</td>
+                                    <td>
+                                        <span class="badge badge-danger" *ngIf="list.Status === 'Inactive'">In-Active</span>
+                                        <span class="badge badge-warning" *ngIf="list.Status === 'Pending'">Pending</span>
+                                        <span class="badge badge-success" *ngIf="list.Status === 'Approved'">Approved</span>
+                                        <span class="badge badge-danger" *ngIf="list.Status === 'Rejected'">Rejected</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-info" *ngIf="list.Status === 'Rejected' || list.Status === 'Inactive'" style="cursor: pointer; margin-right: 8px;" nz-tooltip nzTooltipTitle="Upload Document" (click)="uploadDocs(list.Id)"><i class="ti-upload"></i></span>
+                                        <span class="badge badge-success" style="cursor: pointer;" nz-tooltip nzTooltipTitle="View Uploaded Documents" (click)="getDirectorDocList(list.Id)"><i class="ti-eye"></i></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody *ngIf="directortList.length < 1">
+                                <tr>
+                                    <td colspan="7" class="text-center">
+                                        <div class="mt-3 mb-3 font-23">
+                                            <h5 class="" style="color: #0E773B;">No Data...</h5>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </nz-spin>
+        </div>
+
+        <div class="row" *ngIf="showDocList">
+            <div class="col-xl-12 d-flex">
+                <div class="col-8 col-xl-8">
+                    <div class="" style="font-size: 1.75rem; font-weight: 600; color: #000; margin-bottom: 20px;">
+                        List of Document
+                    </div>
+                </div>
+                <div class="col-4 col-xl-4 col-sm-4">
+                    <div class="" style="float: right;">
+                        <button class="btn btn-primary" style="padding: 3px 15px 3px 15px; margin-top: 10px;" (click)="dirList()">Director List</button>
+                    </div>
+                </div>
+            </div>
+            <ng-template #indicatorTemplate><i nz-icon nzType="loading" class="mt-5" style="font-size: 30px; color: #4CAF50; margin-top: 20px;" nzSpin="true"></i></ng-template>
+            <nz-spin simple [nzIndicator]="indicatorTemplate" [nzSpinning]="isSpinningTable">
+                <div class="col-xl-12">
+                    <div class="table-responsive">
+                        <table class="table display mb-4 dataTablesCard order-table card-table text-black">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>File Name</th>
+                                    <th>Date Uploaded</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody *ngIf="directorDocumentList.length > 0">
+                                <tr *ngFor="let list of directorDocumentList, let i = index">
+                                    <td>{{ i+1 }}</td>
+                                    <td>{{ list.FileName }}</td>
+                                    <td>{{ list.DateUploaded | date}}</td>
+                                    <td>
+                                        <span class="badge badge-success" style="cursor: pointer;" nz-tooltip nzTooltipTitle="Update Document" (click)="updateDoc(list.Id, list.DirectorId)"><i class="flaticon-381-notepad"></i></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody *ngIf="directorDocumentList.length < 1">
+                                <tr>
+                                    <td colspan="7" class="text-center">
+                                        <div class="mt-3 mb-3 font-23">
+                                            <h5 class="" style="color: #0E773B;">No Document has been uploaded...</h5>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </nz-spin>
+        </div>
+
+        <div class="row" *ngIf="showCreate">
+            <div class="col-xl-12 d-flex">
+                <div class="col-8 col-xl-8">
+                    <div class="" style="font-size: 1.75rem; font-weight: 600; color: #000; margin-bottom: 20px;">
+                        Add Director
+                    </div>
+                </div>
+                <div class="col-4 col-xl-4 col-sm-4">
+                    <div class="" style="float: right;">
+                        <button class="btn btn-primary" style="padding: 3px 15px 3px 15px; margin-top: 10px;" (click)="documentList()">View Documents</button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-xl-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Add Director</h4>
+                    </div>
+                    <div class="card-body">
+                        <form [formGroup]="directorForm">
+                            <ng-template #indicatorTemplate2><i nz-icon nzType="loading" class="mt-5" style="font-size: 30px; color: #4CAF50; margin-top: 20px;" nzSpin="true"></i></ng-template>
+                            <nz-spin simple [nzIndicator]="indicatorTemplate2" [nzSpinning]="isSpinningSubmit">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-3 mt-4">
+                                            <label style="font-weight: 600;">First Name</label>
+                                            <div class="">
+                                                <input type="text" class="form-control" formControlName="firstName" placeholder="Enter First Name" />
+                                            </div>
+                                            <span class="text-danger valiFontSizes" *ngIf="directorForm.get('firstName')?.errors && (directorForm.get('firstName')?.touched || directorForm.get('firstName')?.dirty)">
+                                              <span *ngIf="directorForm.get('firstName')?.errors?.['required']">First Name is required</span>
+                                            <span *ngIf="directorForm.get('firstName')?.errors?.['pattern']">Acccept alphabet only</span><br>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-3 mt-4">
+                                            <label style="font-weight: 600;">Last Name</label>
+                                            <div class="">
+                                                <input type="text" class="form-control" formControlName="lastName" placeholder="Enter Last Name" />
+                                            </div>
+                                            <span class="text-danger valiFontSizes" *ngIf="directorForm.get('lastName')?.errors && (directorForm.get('lastName')?.touched || directorForm.get('lastName')?.dirty)">
+                                            <span *ngIf="directorForm.get('lastName')?.errors?.['required']">Last Name is required</span>
+                                            <span *ngIf="directorForm.get('lastName')?.errors?.['pattern']">Accept alphabet only</span><br>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-3 mt-4">
+                                            <label style="font-weight: 600;">Phone Number</label>
+                                            <div class="">
+                                                <input type="text" maxlength="11" class="form-control" formControlName="phoneNumber" placeholder="Enter Phone Number" />
+                                            </div>
+                                            <span class="text-danger valiFontSizes" *ngIf="directorForm.get('phoneNumber')?.errors && (directorForm.get('phoneNumber')?.touched || directorForm.get('phoneNumber')?.dirty)">
+                                            <span *ngIf="directorForm.get('phoneNumber')?.errors?.['required']">Phone Number is required</span>
+                                            <span *ngIf="directorForm.get('phoneNumber')?.errors?.['pattern']">Accept numbers only.</span>&nbsp;
+                                            <span *ngIf="directorForm.get('phoneNumber')?.errors?.['minlength']">Accept 11 numbers only</span><br>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-3 mt-4">
+                                            <label style="font-weight: 600;">BVN</label>
+                                            <div class="">
+                                                <input type="text" maxlength="11" class="form-control" formControlName="bvn" placeholder="Enter BVN" />
+                                            </div>
+                                            <span class="text-danger valiFontSizes" *ngIf="directorForm.get('bvn')?.errors && (directorForm.get('bvn')?.touched || directorForm.get('bvn')?.dirty)">
+                                          <span *ngIf="directorForm.get('bvn')?.errors?.['required']">BVN is required</span>
+                                            <span *ngIf="directorForm.get('bvn')?.errors?.['pattern']">Accept numbers only.</span>&nbsp;
+                                            <span *ngIf="directorForm.get('bvn')?.errors?.['minlength']">Accept 11 numbers only</span><br>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 mt-4">
+                                            <label style="font-weight: 600;">Email</label>
+                                            <div class="">
+                                                <input type="text" class="form-control" formControlName="email" placeholder="Enter Email" />
+                                            </div>
+                                            <span class="text-danger valiFontSizes" *ngIf="directorForm.get('email')?.errors && (directorForm.get('email')?.touched || directorForm.get('email')?.dirty)">
+                                        <span *ngIf="directorForm.get('email')?.errors?.['required']">Email is required</span>
+                                            <span *ngIf="directorForm.get('email')?.errors?.['pattern']">Email is not valid</span><br>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-4 mt-4">
+                                            <label style="font-weight: 600;">Date Of Birth</label>
+                                            <div class="">
+                                                <input type="date" class="form-control" formControlName="dateOfBirth" placeholder="Enter Date Of Birth" />
+                                            </div>
+                                            <span class="text-danger valiFontSizes" *ngIf="directorForm.get('dateOfBirth')?.errors && (directorForm.get('dateOfBirth')?.touched || directorForm.get('dateOfBirth')?.dirty)">
+                                            <span *ngIf="directorForm.get('dateOfBirth')?.errors?.['required']">Date Of Birth is required</span>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-4 mt-4">
+                                            <label style="font-weight: 600;">Position</label>
+                                            <div class="">
+                                                <input type="text" class="form-control" formControlName="position" placeholder="Enter Position" />
+                                            </div>
+                                            <span class="text-danger valiFontSizes" *ngIf="directorForm.get('position')?.errors && (directorForm.get('position')?.touched || directorForm.get('position')?.dirty)">
+                                          <span *ngIf="directorForm.get('position')?.errors?.['required']">Position is required</span>
+                                            <span *ngIf="directorForm.get('position')?.errors?.['pattern']">Accept alphabets only</span><br>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4">
+                                    <button class="btn btn-primary w-100" style="padding: 7px 15px 7px 15px; margin-top: 10px;" [disabled]="directorForm!.invalid" (click)="submitAddDirector()">Add Director</button>
+                                </div>
+                            </nz-spin>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="showUploadDoc">
+            <div class="col-xl-12 d-flex">
+                <div class="col-8 col-xl-8">
+                    <div class="" style="font-size: 1.75rem; font-weight: 600; color: #000; margin-bottom: 20px;">
+                        Upload
+                    </div>
+                </div>
+                <div class="col-4 col-xl-4 col-sm-4">
+                    <div class="" style="float: right;">
+                        <button class="btn btn-primary" style="padding: 3px 15px 3px 15px; margin-top: 10px;" (click)="documentList()">View Documents</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-xl-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Document Upload</h4>
+                    </div>
+                    <div class="card-body">
+                        <ng-template #indicatorTemplate23><i nz-icon nzType="loading" class="mt-5" style="font-size: 30px; color: #4CAF50; margin-top: 20px;" nzSpin="true"></i></ng-template>
+                        <nz-spin simple [nzIndicator]="indicatorTemplate23" [nzSpinning]="isSpinningSubmit">
+                            <div class="basic-form">
+                                <form>
+                                    <div class="mb-3">
+                                        <p style="font-weight: 600;">Upload Document<span style="margin-left: 10px; font-size: 14px !important;"><i class="fa fa-question-circle me-2"></i></span></p>
+                                        <div class="input-group">
+                                            <div class="form-file">
+                                                <input type="file" multiple class="form-file-input form-control" (change)="docUpload($event)" accept=".pdf, .png, .jpg">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="mt-4">
+                                    <button class="btn btn-primary w-100" style="padding: 7px 15px 7px 15px; margin-top: 10px;" (click)="uploadDocSubmit()">Upload</button>
+                                </div>
+                            </div>
+                        </nz-spin>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="shpwUpdateDoc">
+            <div class="col-xl-12 d-flex">
+                <div class="col-8 col-xl-8">
+                    <div class="" style="font-size: 1.75rem; font-weight: 600; color: #000; margin-bottom: 20px;">
+                        Update
+                    </div>
+                </div>
+                <!-- <div class="col-4 col-xl-4 col-sm-4">
+                  <div class="" style="float: right;">
+                      <button class="btn btn-primary" style="padding: 3px 15px 3px 15px; margin-top: 10px;" (click)="documentList()">View Documents</button>
+                  </div>
+              </div> -->
+
+            </div>
+
+            <div class="col-xl-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Update Document</h4>
+                    </div>
+                    <div class="card-body">
+                        <ng-template #indicatorTemplate23><i nz-icon nzType="loading" class="mt-5" style="font-size: 30px; color: #4CAF50; margin-top: 20px;" nzSpin="true"></i></ng-template>
+                        <nz-spin simple [nzIndicator]="indicatorTemplate23" [nzSpinning]="isSpinningSubmit">
+                            <div class="basic-form">
+                                <form>
+                                    <div class="mb-3">
+                                        <p style="font-weight: 600;">Upload Document<span style="margin-left: 10px; font-size: 14px !important;"><i class="fa fa-question-circle me-2"></i></span></p>
+                                        <div class="input-group">
+                                            <div class="form-file">
+                                                <input type="file" class="form-file-input form-control" (change)="docUploadUpdate($event)" accept=".pdf, .png, .jpg">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="mt-4">
+                                    <button class="btn btn-primary w-100" style="padding: 7px 15px 7px 15px; margin-top: 10px;" (click)="updateDocSubmit()">Upload</button>
+                                </div>
+                            </div>
+                        </nz-spin>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

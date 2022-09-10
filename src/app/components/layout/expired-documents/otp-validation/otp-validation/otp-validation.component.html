@@ -1,0 +1,49 @@
+<!-- <div class="vh-100">
+    <div class="authincation h-100">
+        <div class="container h-100">
+            <div class="row justify-content-center h-100 align-items-center" *ngIf="formShow">
+                <div class="col-md-6">
+                    <div class="authincation-content">
+                        <div class="row no-gutters">
+                            <ng-template #indicatorTemplate><i nz-icon nzType="loading" class="mt-5" style="font-size: 30px; color: #4CAF50; padding-top: 90px;" nzSpin="true"></i></ng-template>
+                            <nz-spin simple [nzIndicator]="indicatorTemplate" [nzSpinning]="isSpinning">
+                                <div class="col-xl-12">
+                                    <div class="auth-form">
+                                        <div class="text-center mb-4">
+                                            <a href="index.html"><img src="assets/images/logologin.png" style="width: 200px; height: 50px;" alt=""></a>
+                                        </div>
+                              
+                                        <form [formGroup]="otpForm">
+                                            <div class="mb-3">
+                                                <label class="mb-1"><strong>OTP<span style="color: orangered; margin-left: 2px;">*</span></strong></label>
+                                                <input type="text" maxlength="6" formControlName="otp" class="form-control" placeholder="Enter OTP">
+                                                <span class="text-danger valiFontSizes" *ngIf="otpForm.get('otp')?.errors && (otpForm.get('otp')?.touched || otpForm.get('otp')?.dirty)">
+                                                <span *ngIf="otpForm.get('otp')?.errors?.['required']">Otp is required</span>
+                                                <span *ngIf="otpForm.get('otp')?.errors?.['pattern']">Accept numbers only.</span><br>
+                                                <span *ngIf="otpForm.get('otp')?.errors?.['minlength']">Accept 6 numbers only.</span>
+                                                </span>
+                                            </div>
+                                            <div class="text-center">
+                                                <button nz-button [nzLoading]="isLoadingThree" style="
+                                                background-color: #2e8a01;
+                                                border: #2e8a01;
+                                                border-radius: 5rem;
+                                              "
+                                              type="submit" (click)="expiredDocs()" [disabled]="!otpForm.valid"  class="btn btn-primary btn-block" >Submit</button>
+                                            </div>
+                                        </form>
+                                        <div class="new-account mt-3 text-center">
+                                            <p>Don't receive OTP? Click to resend <a class="text-primary" routerLink="/register"></a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </nz-spin>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    
+        </div>
+    </div>
+</div> -->

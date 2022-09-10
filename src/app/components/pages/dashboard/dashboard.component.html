@@ -1,0 +1,494 @@
+<div class="content-body">
+    <div class="container-fluid">
+        <div class="row" *ngIf="accList">
+            <div class="col-xl-12">
+                <div class="col-xl-12 d-flex">
+                    <div class="col-8 col-xl-8">
+                        <div class="" style="font-size: 1.75rem; font-weight: 600; color: #000; margin-bottom: 20px;">
+                            List of Accounts
+                        </div>
+                    </div>
+                    <div class="col-4 col-xl-4 col-sm-4">
+                        <div class="" style="float: right;">
+                            <button class="btn btn-primary" style="padding: 3px 15px 3px 15px; margin-top: 10px;" *ngIf="twoFactorCheck" (click)="enableTwoFactor()">Enable 2factor</button>
+                        </div>
+                    </div>
+                </div>
+                <ng-template #indicatorTemplate><i nz-icon nzType="loading" class="mt-5" style="font-size: 30px; color: #4CAF50; margin-top: 20px;" nzSpin="true"></i></ng-template>
+                <nz-spin simple [nzIndicator]="indicatorTemplate" [nzSpinning]="isSpinningAcc">
+                    <div class="row">
+                        <div class="col-xl-6" *ngFor="let list of accountInfo">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center flex-wrap">
+                                        <div class="d-flex">
+                                            <span class="Studios-info">
+                                              <i class="flaticon-381-id-card-1"  *ngIf="list.AccountStatus === 'NOTACTIVE'" style="font-size: 60px; color: #F94A4A;"></i>
+                                              <i class="flaticon-381-id-card-1"  *ngIf="list.AccountStatus === 'INACTIVE'" style="font-size: 60px; color: #F94A4A;"></i>
+                                              <i class="flaticon-381-id-card-1" *ngIf="list.AccountStatus === 'ACTIVE'" style="font-size: 60px; color: #63B44B;"></i>
+                                              <i class="flaticon-381-id-card-1" *ngIf="list.AccountStatus === 'DORMANT'" style="font-size: 60px; color: #b4a44b;"></i>
+                                            </span>
+                                            <div>
+                                                <h4 class="fs-20 mb-1" style="font-weight: 600;">{{ list.AccountName }}</h4>
+                                                <span class="d-block">Account No: {{ list.AccountNumber }}</span>
+                                                <span class="d-block">BVN: {{ list.Bvn }}</span>
+                                                <span class="mb-3 d-block">Account Tier: {{ list.AccountTier }}</span>
+                                                <span class="d-block" *ngIf="list.AccountStatus === 'ACTIVE'" style="color: #63B44B;"><i class="fa fa-hourglass-start me-2"></i>{{ list.AccountStatus }}</span>
+                                                <span class="d-block" *ngIf="list.AccountStatus === 'DORMANT'" style="color: #b4a44b;"><i class="fa fa-hourglass-start me-2"></i>{{ list.AccountStatus }}</span>
+                                                <span class="d-block" *ngIf="list.AccountStatus === 'NOTACTIVE'" style="color: #F94A4A;"><i class="fa fa-hourglass-start me-2"></i>{{ list.AccountStatus }}</span>
+                                                <span class="d-block" *ngIf="list.AccountStatus === 'INACTIVE'" style="color: #F94A4A;"><i class="fa fa-hourglass-start me-2"></i>{{ list.AccountStatus }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="job-available">
+                                            <a href="javascript:void(0);" class="btn btn-outline-primary btn-rounded" style="margin-right: 10px; padding: 3px 15px 3px 15px;" (click)="viewDocument(list.AccountNumber)">View Documents</a>
+                                            <a href="javascript:void(0);" class="btn btn-outline-warning btn-rounded" style="margin-right: 10px; padding: 3px 15px 3px 15px;" (click)="viewSignatory(list.AccountNumber)">View Signatories</a>
+                                            <a href="javascript:void(0);" class="btn btn-outline-primary btn-rounded" style="padding: 3px 15px 3px 15px;" *ngIf="list.AccountTier === 'Tier 1'" (click)="upgradeAcc(list.AccountNumber, list.AccountTier)">Upgrade Account</a>
+                                            <a href="javascript:void(0);" class="btn btn-outline-primary btn-rounded" style="padding: 3px 15px 3px 15px;" *ngIf="list.AccountTier === 'Tier 2'" (click)="upgradeAcc(list.AccountNumber, list.AccountTier)">Upgrade Account</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nz-spin>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="uploadedDoc">
+            <div class="col-xl-12 d-flex">
+                <div class="col-8 col-xl-8">
+                    <div class="" style="font-size: 1.75rem; font-weight: 600; color: #000; margin-bottom: 20px;">
+                        Uploaded Documents
+                    </div>
+                </div>
+                <div class="col-4 col-xl-4 col-sm-4">
+                    <div class="" style="float: right;">
+                        <button class="btn btn-primary" style="padding: 3px 15px 3px 15px; margin-top: 10px;" (click)="viewAccountDash()">View Accounts</button>
+                    </div>
+                </div>
+            </div>
+            <ng-template #indicatorTemplate><i nz-icon nzType="loading" class="mt-5" style="font-size: 30px; color: #4CAF50; margin-top: 20px;" nzSpin="true"></i></ng-template>
+            <nz-spin simple [nzIndicator]="indicatorTemplate" [nzSpinning]="isSpinningTable">
+                <div class="col-xl-12">
+                    <div class="table-responsive">
+                        <table class="table display mb-4 dataTablesCard order-table card-table text-black">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <!-- <th>Image</th> -->
+                                    <th>File Name</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody *ngIf="documentList.length > 0">
+                                <tr *ngFor="let list of documentList, let i = index">
+                                    <td>{{ i+1 }}</td>
+                                    <!-- <td><img [src]="'data:image/png;base64,' + list.Base64Encoded" style="width: 70px; height: 70px;" /></td> -->
+                                    <td>{{ list.FileName }}</td>
+                                    <td>
+                                        <span class="badge badge-success" *ngIf="list.Status === 'approved'">Approved</span>
+                                        <span class="badge badge-warning" *ngIf="list.Status === 'pending'">Pending</span>
+                                        <span class="badge badge-danger" *ngIf="list.Status === 'rejected'">Rejected</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-success" *ngIf="list.Status === 'rejected'" (click)="reuploadDoc(list.Id)" style="cursor: pointer;">Re-Upload</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody *ngIf="documentList.length < 1">
+                                <tr>
+                                    <td colspan="7" class="text-center">
+                                        <div class="mt-3 mb-3 font-23">
+                                            <h5 class="" style="color: #0E773B;">No Data...</h5>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </nz-spin>
+        </div>
+
+        <div class="row" *ngIf="showSignatory">
+            <div class="col-xl-12 d-flex">
+                <div class="col-6 col-xl-6">
+                    <div class="" style="font-size: 1.75rem; font-weight: 600; color: #000; margin-bottom: 20px;">
+                        List of Signatory
+                    </div>
+                </div>
+                <div class="col-6 col-xl-6">
+                    <div class="d-flex" style="float: right;">
+                        <button class="btn btn-success" style="padding: 3px 15px 3px 15px; margin-top: 10px; margin-right: 10px;" (click)="addSig()">Add Signatory</button>
+                        <button class="btn btn-primary" style="padding: 3px 15px 3px 15px; margin-top: 10px;" (click)="viewAccountDash()">View Accounts</button>
+                    </div>
+                </div>
+            </div>
+            <ng-template #indicatorTemplate87><i nz-icon nzType="loading" class="mt-5" style="font-size: 30px; color: #4CAF50; margin-top: 20px;" nzSpin="true"></i></ng-template>
+            <nz-spin simple [nzIndicator]="indicatorTemplate87" [nzSpinning]="isSpinningTable">
+                <div class="col-xl-12">
+                    <div class="table-responsive">
+                        <table class="table display mb-4 dataTablesCard order-table card-table text-black">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone Number</th>
+                                    <th>BVN</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody *ngIf="signatoryList.length > 0">
+                                <tr *ngFor="let list of signatoryList, let i = index">
+                                    <td>{{ i+1 }}</td>
+                                    <td>{{ list.FirstName }} {{ list.LastName }}</td>
+                                    <td>{{ list.Email }}</td>
+                                    <td>{{ list.PhoneNumber }}</td>
+                                    <td>{{ list.Bvn }}</td>
+                                    <td>
+                                        <span class="badge badge-danger" *ngIf="list.Status === 'Inactive'">Inactive</span>
+                                        <span class="badge badge-success" *ngIf="list.Status === 'Active'">Active</span>
+                                        <span class="badge badge-warning" *ngIf="list.Status === 'Pending'">Pending</span>
+                                    </td>
+                                    <td class="d-flex">
+                                        <span class="badge badge-info" style="cursor: pointer; margin-right: 10px;" nz-tooltip nzTooltipTitle="Upload Document" (click)="uploadSignaDoc(list.Id)"><i class="ti-upload"></i></span>
+                                        <span class="badge badge-success" style="cursor: pointer;" nz-tooltip nzTooltipTitle="View Document" (click)="viewSignaDoc(list.Id)"><i class="ti-eye"></i></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody *ngIf="signatoryList.length < 1">
+                                <tr>
+                                    <td colspan="7" class="text-center">
+                                        <div class="mt-3 mb-3 font-23">
+                                            <h5 class="" style="color: #0E773B;">No Data...</h5>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </nz-spin>
+        </div>
+
+        <div class="row" *ngIf="showSignatoryDocument">
+            <div class="col-xl-12 d-flex">
+                <div class="col-6 col-xl-6">
+                    <div class="" style="font-size: 1.75rem; font-weight: 600; color: #000; margin-bottom: 20px;">
+                        List of Document
+                    </div>
+                </div>
+                <div class="col-6 col-xl-6">
+                    <div class="" style="float: right;">
+                        <button class="btn btn-primary" style="padding: 3px 15px 3px 15px; margin-top: 10px;" (click)="viewSignatoryList()">View Signatory</button>
+                    </div>
+                </div>
+            </div>
+            <ng-template #indicatorTemplate87><i nz-icon nzType="loading" class="mt-5" style="font-size: 30px; color: #4CAF50; margin-top: 20px;" nzSpin="true"></i></ng-template>
+            <nz-spin simple [nzIndicator]="indicatorTemplate87" [nzSpinning]="isSpinningTable">
+                <div class="col-xl-12">
+                    <div class="table-responsive">
+                        <table class="table display mb-4 dataTablesCard order-table card-table text-black">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>File Name</th>
+                                    <th>Date Uploaded</th>
+                                </tr>
+                            </thead>
+
+                            <tbody *ngIf="signatoryDocumentList.length > 0">
+                                <tr *ngFor="let list of signatoryDocumentList, let i = index">
+                                    <td>{{ i+1 }}</td>
+                                    <td>{{ list.FileName }} {{ list.LastName }}</td>
+                                    <td>{{ list.DateUploaded | date }}</td>
+                                </tr>
+                            </tbody>
+                            <tbody *ngIf="signatoryDocumentList.length < 1">
+                                <tr>
+                                    <td colspan="7" class="text-center">
+                                        <div class="mt-3 mb-3 font-23">
+                                            <h5 class="" style="color: #0E773B;">No Data...</h5>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </nz-spin>
+        </div>
+
+        <div class="row" *ngIf="showAddSignatory">
+            <div class="col-xl-12 d-flex">
+                <div class="col-8 col-xl-8">
+                    <div class="" style="font-size: 1.75rem; font-weight: 600; color: #000; margin-bottom: 20px;">
+                        Signatory
+                    </div>
+                </div>
+                <div class="col-4 col-xl-4 col-sm-4">
+                    <div class="" style="float: right;">
+                        <button class="btn btn-primary" style="padding: 3px 15px 3px 15px; margin-top: 10px;" (click)="viewAccountDash()">View Accounts</button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-xl-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Add Signatory</h4>
+                    </div>
+                    <div class="card-body">
+                        <form [formGroup]="addSignatoryForm">
+                            <ng-template #indicatorTemplate2><i nz-icon nzType="loading" class="mt-5" style="font-size: 30px; color: #4CAF50; margin-top: 20px;" nzSpin="true"></i></ng-template>
+                            <nz-spin simple [nzIndicator]="indicatorTemplate2" [nzSpinning]="isSpinningSubmit">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-3 mt-4">
+                                            <label style="font-weight: 600;">First Name</label>
+                                            <div class="">
+                                                <input type="text" class="form-control" formControlName="firstName" placeholder="Enter First Name" />
+                                            </div>
+                                            <span class="text-danger valiFontSizes" *ngIf="addSignatoryForm.get('firstName')?.errors && (addSignatoryForm.get('firstName')?.touched || addSignatoryForm.get('firstName')?.dirty)">
+                                          <span *ngIf="addSignatoryForm.get('firstName')?.errors?.['required']">First Name is required</span>
+                                            <span *ngIf="addSignatoryForm.get('firstName')?.errors?.['pattern']">Acccept alphabet only</span><br>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-3 mt-4">
+                                            <label style="font-weight: 600;">Last Name</label>
+                                            <div class="">
+                                                <input type="text" class="form-control" formControlName="lastName" placeholder="Enter Last Name" />
+                                            </div>
+                                            <span class="text-danger valiFontSizes" *ngIf="addSignatoryForm.get('lastName')?.errors && (addSignatoryForm.get('lastName')?.touched || addSignatoryForm.get('lastName')?.dirty)">
+                                        <span *ngIf="addSignatoryForm.get('lastName')?.errors?.['required']">Last Name is required</span>
+                                            <span *ngIf="addSignatoryForm.get('lastName')?.errors?.['pattern']">Accept alphabet only</span><br>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-3 mt-4">
+                                            <label style="font-weight: 600;">Phone Number</label>
+                                            <div class="">
+                                                <input type="text" maxlength="11" class="form-control" formControlName="phoneNumber" placeholder="Enter Phone Number" />
+                                            </div>
+                                            <span class="text-danger valiFontSizes" *ngIf="addSignatoryForm.get('phoneNumber')?.errors && (addSignatoryForm.get('phoneNumber')?.touched || addSignatoryForm.get('phoneNumber')?.dirty)">
+                                        <span *ngIf="addSignatoryForm.get('phoneNumber')?.errors?.['required']">Phone Number is required</span>
+                                            <span *ngIf="addSignatoryForm.get('phoneNumber')?.errors?.['pattern']">Accept numbers only.</span>&nbsp;
+                                            <span *ngIf="addSignatoryForm.get('phoneNumber')?.errors?.['minlength']">Accept 11 numbers only</span><br>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-3 mt-4">
+                                            <label style="font-weight: 600;">BVN</label>
+                                            <div class="">
+                                                <input type="text" maxlength="11" class="form-control" formControlName="bvn" placeholder="Enter BVN" />
+                                            </div>
+                                            <span class="text-danger valiFontSizes" *ngIf="addSignatoryForm.get('bvn')?.errors && (addSignatoryForm.get('bvn')?.touched || addSignatoryForm.get('bvn')?.dirty)">
+                                      <span *ngIf="addSignatoryForm.get('bvn')?.errors?.['required']">BVN is required</span>
+                                            <span *ngIf="addSignatoryForm.get('bvn')?.errors?.['pattern']">Accept numbers only.</span>&nbsp;
+                                            <span *ngIf="addSignatoryForm.get('bvn')?.errors?.['minlength']">Accept 11 numbers only</span><br>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 mt-4">
+                                            <label style="font-weight: 600;">Email</label>
+                                            <div class="">
+                                                <input type="text" class="form-control" formControlName="email" placeholder="Enter Email" />
+                                            </div>
+                                            <span class="text-danger valiFontSizes" *ngIf="addSignatoryForm.get('email')?.errors && (addSignatoryForm.get('email')?.touched || addSignatoryForm.get('email')?.dirty)">
+                                    <span *ngIf="addSignatoryForm.get('email')?.errors?.['required']">Email is required</span>
+                                            <span *ngIf="addSignatoryForm.get('email')?.errors?.['pattern']">Email is not valid</span><br>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-4 mt-4">
+                                            <label style="font-weight: 600;">Date Of Birth</label>
+                                            <div class="">
+                                                <input type="date" class="form-control" formControlName="dateOfBirth" placeholder="Enter Date Of Birth" />
+                                            </div>
+                                            <span class="text-danger valiFontSizes" *ngIf="addSignatoryForm.get('dateOfBirth')?.errors && (addSignatoryForm.get('dateOfBirth')?.touched || addSignatoryForm.get('dateOfBirth')?.dirty)">
+                                        <span *ngIf="addSignatoryForm.get('dateOfBirth')?.errors?.['required']">Date Of Birth is required</span>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-4 mt-4">
+                                            <label style="font-weight: 600;">Position</label>
+                                            <div class="">
+                                                <input type="text" class="form-control" formControlName="position" placeholder="Enter Position" />
+                                            </div>
+                                            <span class="text-danger valiFontSizes" *ngIf="addSignatoryForm.get('position')?.errors && (addSignatoryForm.get('position')?.touched || addSignatoryForm.get('position')?.dirty)">
+                                      <span *ngIf="addSignatoryForm.get('position')?.errors?.['required']">Position is required</span>
+                                            <span *ngIf="addSignatoryForm.get('position')?.errors?.['pattern']">Accept alphabets only</span><br>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4">
+                                    <button class="btn btn-primary w-100" style="padding: 7px 15px 7px 15px; margin-top: 10px;" [disabled]="addSignatoryForm!.invalid" (click)="submitAddSignatory()">Add Signatory</button>
+                                </div>
+                            </nz-spin>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="showUploadSignatoryDoc">
+            <div class="col-xl-12 d-flex">
+                <div class="col-8 col-xl-8">
+                    <div class="" style="font-size: 1.75rem; font-weight: 600; color: #000; margin-bottom: 20px;">
+                        Upload Signatory Document
+                    </div>
+                </div>
+                <div class="col-4 col-xl-4 col-sm-4">
+                    <div class="" style="float: right;">
+                        <button class="btn btn-primary" style="padding: 3px 15px 3px 15px; margin-top: 10px;" (click)="viewSignatoryList()">View Signatory</button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-xl-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Upload Document</h4>
+                    </div>
+                    <div class="card-body">
+                        <ng-template #indicatorTemplate><i nz-icon nzType="loading" class="mt-5" style="font-size: 30px; color: #4CAF50; margin-top: 20px;" nzSpin="true"></i></ng-template>
+                        <nz-spin simple [nzIndicator]="indicatorTemplate" [nzSpinning]="isSpinningSubmit">
+                            <div class="basic-form">
+                                <form>
+                                    <div class="">
+                                        <p style="font-weight: 600;">Upload Document</p>
+                                        <div class="input-group">
+                                            <div class="form-file">
+                                                <input type="file" class="form-file-input form-control" (change)="uploadSignatoryDoc($event)">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="mt-4">
+                                    <button class="btn btn-primary w-100" style="padding: 7px 15px 7px 15px; margin-top: 10px;" (click)="uploadSignatoryDocSubmit()">Submit</button>
+                                </div>
+                            </div>
+                        </nz-spin>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="accountUp">
+            <div class="col-xl-12 d-flex">
+                <div class="col-8 col-xl-8">
+                    <div class="" style="font-size: 1.75rem; font-weight: 600; color: #000; margin-bottom: 20px;">
+                        Account Upgrade
+                    </div>
+                </div>
+                <div class="col-4 col-xl-4 col-sm-4">
+                    <div class="" style="float: right;">
+                        <button class="btn btn-primary" style="padding: 3px 15px 3px 15px; margin-top: 10px;" (click)="viewAccountDash()">View Accounts</button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-xl-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Upgrade Account</h4>
+                    </div>
+                    <div class="card-body">
+                        <ng-template #indicatorTemplate><i nz-icon nzType="loading" class="mt-5" style="font-size: 30px; color: #4CAF50; margin-top: 20px;" nzSpin="true"></i></ng-template>
+                        <nz-spin simple [nzIndicator]="indicatorTemplate" [nzSpinning]="isSpinningSubmit">
+                            <div class="basic-form">
+
+                                <!-- <div class="input-group mb-4" *ngIf="forT2">
+                                    <label class="input-group-text mb-0" style="font-weight: 600;">Select Tier</label>
+                                    <select class="default-select  form-control wide" (change)="selectTier($event)">
+                                        <option selected="">Choose...</option>
+                                        <option value="T2">Tier 2</option>
+                                        <option value="T3">Tier 3</option>
+                                    </select>
+                                </div>
+                                <div class="input-group mb-4" *ngIf="forT3">
+                                    <label class="input-group-text mb-0" style="font-weight: 600;">Select Tier</label>
+                                    <select class="default-select  form-control wide" (change)="selectTier($event)">
+                                        <option selected="">Choose...</option>
+                                        <option value="T3">Tier 3</option>
+                                    </select>
+                                </div>
+
+                                <div class="input-group mb-4">
+                                    <label class="input-group-text mb-0" style="font-weight: 600;">Select ID Card Type</label>
+                                    <select class="default-select  form-control wide">
+                                    <option selected="">Choose...</option>
+                                    <option value="1">NIN</option>
+                                    <option value="2">International Passport</option>
+                                    <option value="2">Drivers License</option>
+                                </select>
+                                </div> -->
+                                <form>
+                                    <div class="mb-3" *ngFor="let list of documentLisType">
+                                        <p style="font-weight: 600;">{{ list.DocumentName }}<span style="margin-left: 10px; font-size: 14px !important;" nz-tooltip [nzTooltipTitle]="list.SideNote"><i class="fa fa-question-circle me-2"></i></span></p>
+                                        <div class="input-group">
+                                            <div class="form-file">
+                                                <input type="file" class="form-file-input form-control" (change)="idUpload($event, list.Id)" accept=".pdf, .png, .jpg">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="mt-4">
+                                    <button class="btn btn-primary w-100" style="padding: 7px 15px 7px 15px; margin-top: 10px;" (click)="uploadDocumentSubmit()">Upgrade Accounts</button>
+                                </div>
+                            </div>
+                        </nz-spin>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="accountUpUpdate">
+            <div class="col-xl-12 d-flex">
+                <div class="col-8 col-xl-8">
+                    <div class="" style="font-size: 1.75rem; font-weight: 600; color: #000; margin-bottom: 20px;">
+                        Re-Upload Account Document
+                    </div>
+                </div>
+                <div class="col-4 col-xl-4 col-sm-4">
+                    <div class="" style="float: right;">
+                        <button class="btn btn-primary" style="padding: 3px 15px 3px 15px; margin-top: 10px;" (click)="viewAccountDash()">View Accounts</button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-xl-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Upgrade Account</h4>
+                    </div>
+                    <div class="card-body">
+                        <ng-template #indicatorTemplate><i nz-icon nzType="loading" class="mt-5" style="font-size: 30px; color: #4CAF50; margin-top: 20px;" nzSpin="true"></i></ng-template>
+                        <nz-spin simple [nzIndicator]="indicatorTemplate" [nzSpinning]="isSpinningSubmit">
+                            <div class="basic-form">
+                                <form>
+                                    <div class="">
+                                        <p style="font-weight: 600;">Upload Document</p>
+                                        <div class="input-group">
+                                            <div class="form-file">
+                                                <input type="file" class="form-file-input form-control" (change)="uploadDocUpdate($event)">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="mt-4">
+                                    <button class="btn btn-primary w-100" style="padding: 7px 15px 7px 15px; margin-top: 10px;" (click)="uploadDocumentUpdateSubmit()">Upgrade Accounts</button>
+                                </div>
+                            </div>
+                        </nz-spin>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

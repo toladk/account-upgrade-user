@@ -1,0 +1,55 @@
+<div class="vh-100">
+    <div class="authincation h-100">
+        <div class="container h-100">
+            <div class="row justify-content-center h-100 align-items-center">
+                <div class="col-md-6">
+                    <div class="authincation-content">
+                        <div class="row no-gutters">
+                            <ng-template #indicatorTemplate><i nz-icon nzType="loading" class="mt-5" style="font-size: 30px; color: #4CAF50; padding-top: 190px;" nzSpin="true"></i></ng-template>
+                            <nz-spin simple [nzIndicator]="indicatorTemplate" [nzSpinning]="isSpinning">
+                                <div class="col-xl-12">
+                                    <div class="auth-form">
+                                        <div class="text-center mb-4">
+                                            <a href="index.html"><img src="assets/images/logologin.png" style="width: 200px; height: 50px;" alt=""></a>
+                                        </div>
+                                        <h4 class="text-center mb-4">Sign into your account</h4>
+                                        <form [formGroup]="loginForm">
+                                            <div class="mb-3">
+                                                <label class="mb-1"><strong>Email<span style="color: orangered; margin-left: 2px;">*</span></strong></label>
+                                                <input type="email" formControlName="email" class="form-control" placeholder="Enter Email">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="mb-1"><strong>Password<span style="color: orangered; margin-left: 2px;">*</span></strong></label>
+                                                <input type="password" formControlName="password" class="form-control" placeholder="Enter Password">
+                                            </div>
+                                            <div class="row d-flex justify-content-between mt-4 mb-2">
+                                                <!-- <div class="mb-3">
+                                                <div class="form-check custom-checkbox ms-1">
+                                                    <input type="checkbox" class="form-check-input" id="basic_checkbox_1">
+                                                    <label class="form-check-label" for="basic_checkbox_1">Remember my preference</label>
+                                                </div>
+                                            </div> -->
+                                                <div class="mb-3">
+                                                    <a routerLink="/reset-account-password">Forgot Password?</a>
+                                                </div>
+                                            </div>
+                                            <div class="text-center">
+                                                <button type="submit" [disabled]="!loginForm.valid" class="btn btn-primary btn-block" (click)="onSubmit()">Sign In</button>
+                                            </div>
+                                        </form>
+                                        <div class="new-account mt-3 text-center">
+                                            <p>Don't have an account? <a class="text-primary" routerLink="/register">Sign Up</a></p>
+                                        </div>
+                                        <div class="new-account mt-3 text-center">
+                                            <p>upgrade Test <a class="text-primary" routerLink="/uploadId">upload here</a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </nz-spin>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

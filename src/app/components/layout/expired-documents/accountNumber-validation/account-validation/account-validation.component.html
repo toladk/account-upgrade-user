@@ -1,0 +1,47 @@
+<!-- <div class="vh-100">
+    <div class="authincation h-100">
+        <div class="container h-100">
+            <div class="row justify-content-center h-100 align-items-center" *ngIf="formShow">
+                <div class="col-md-6">
+                    <div class="authincation-content">
+                        <div class="row no-gutters">
+                            <ng-template #indicatorTemplate><i nz-icon nzType="loading" class="mt-5" style="font-size: 30px; color: #4CAF50; padding-top: 90px;" nzSpin="true"></i></ng-template>
+                            <nz-spin simple [nzIndicator]="indicatorTemplate" [nzSpinning]="isSpinning">
+                                <div class="col-xl-12">
+                                    <div class="auth-form">
+                                        <div class="text-center mb-4">
+                                            <a href="index.html"><img src="assets/images/logologin.png" style="width: 200px; height: 50px;" alt=""></a>
+                                        </div>
+                                   
+                                        <form [formGroup]="accountForm">
+                                            <div class="mb-3">
+                                                <label class="mb-1"><strong>Account Number<span style="color: orangered; margin-left: 2px;">*</span></strong></label>
+                                                <input type="text" maxlength="10" class="form-control" formControlName="accountNo" placeholder="Enter Account Number" />
+                                                <span class="text-danger valiFontSizes" *ngIf="accountForm.get('accountNo')?.errors && (accountForm.get('accountNo')?.touched || accountForm.get('accountNo')?.dirty)">
+                                                  <span *ngIf="accountForm.get('accountNo')?.errors?.['required']">Account Number is required</span>
+                                                <span *ngIf="accountForm.get('accountNo')?.errors?.['pattern']">Accept numbers only.</span>&nbsp;
+                                                <span *ngIf="accountForm.get('accountNo')?.errors?.['minlength']">Accept 10 numbers only</span><br>
+                                                </span>
+                                            </div>
+
+                                            <div class="text-center">
+                                                <button   style="
+                                                background-color: #2e8a01;
+                                                border: #2e8a01;
+                                                
+                                                border-radius: 5rem;
+                                              "  nz-button [nzLoading]="isLoadingOne"  type="submit" (click)=" otp()" [disabled]="!accountForm.valid" class="btn btn-primary btn-block" >Submit</button>
+                                            </div>
+                                        </form>
+                                
+                                    </div>
+                                </div>
+                            </nz-spin>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div> -->
